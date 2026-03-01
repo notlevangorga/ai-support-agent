@@ -12,17 +12,27 @@ from rag_engine import (
 )
 
 # -----------------------------
-# Initialize FastAPI (disable docs)
+# Initialize FastAPI
 # -----------------------------
-app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI()  # docs enabled again
 
-# Load vector DB once
-ingest_into_vector_db()
+# Load vector DB once on startup
+@app.on_event("startup")
+def startup_event():
+    ingest_into_vector_db()
 
 CONFIDENCE_THRESHOLD = 0.5
 
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET")
+
+
+# -----------------------------
+# Health Check Route
+# -----------------------------
+@app.get("/")
+def health():
+    return {"status": "running"}
 
 
 # -----------------------------
@@ -61,7 +71,6 @@ def verify_slack_request(request: Request, body: bytes):
 async def slack_events(request: Request):
     body = await request.body()
 
-    # Verify request is truly from Slack
     verify_slack_request(request, body)
 
     data = await request.json()
@@ -70,7 +79,6 @@ async def slack_events(request: Request):
     if data.get("type") == "url_verification":
         return JSONResponse(content={"challenge": data["challenge"]})
 
-    # Handle events
     if "event" in data:
         event = data["event"]
 
@@ -86,7 +94,6 @@ async def slack_events(request: Request):
             else:
                 answer = generate_answer(user_text, retrieved)
 
-            # Send response back to Slack
             requests.post(
                 "https://slack.com/api/chat.postMessage",
                 headers={
