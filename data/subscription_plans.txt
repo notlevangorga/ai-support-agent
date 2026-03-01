@@ -1,0 +1,32 @@
+Subscription Plans – Kolet SaaS Platform
+
+1. Basic Plan
+Price: €19 per month
+Features:
+- Access to core features
+- Email support
+- 5GB data storage
+- Community forum access
+
+2. Pro Plan
+Price: €49 per month
+Features:
+- Everything in Basic
+- Priority email support
+- 50GB data storage
+- Advanced analytics dashboard
+- API access
+
+3. Enterprise Plan
+Price: Custom pricing
+Features:
+- Everything in Pro
+- Dedicated account manager
+- 24/7 phone support
+- Custom integrations
+- SLA guarantee (99.9% uptime)
+- Custom refund clauses
+
+4. Plan Changes
+Upgrades take effect immediately.
+Downgrades take effect at the next billing cycle.

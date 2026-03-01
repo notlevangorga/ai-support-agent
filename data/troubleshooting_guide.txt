@@ -1,0 +1,31 @@
+Technical Troubleshooting Guide – Kolet SaaS Platform
+
+1. Login Issues
+If a user cannot log in:
+- Ensure the correct email is used
+- Reset password using the “Forgot Password” link
+- Clear browser cache and cookies
+- Try using an incognito window
+
+2. Payment Failures
+If a payment fails:
+- Verify card details
+- Ensure sufficient funds
+- Contact the bank to approve online transactions
+- Retry payment after 10 minutes
+
+3. API Errors
+If API requests return 401 Unauthorized:
+- Verify API key validity
+- Check token expiration
+- Ensure correct environment (sandbox vs production)
+
+4. Dashboard Not Loading
+- Check internet connection
+- Disable browser extensions
+- Try another browser
+- Check system status page
+
+5. Data Sync Delays
+Data sync may take up to 15 minutes.
+If delays exceed 30 minutes, escalate to technical support.

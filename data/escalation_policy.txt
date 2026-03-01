@@ -1,0 +1,27 @@
+Escalation & SLA Policy – Kolet SaaS Platform
+
+1. Standard Support Response Times
+Basic Plan: 48 business hours
+Pro Plan: 24 business hours
+Enterprise Plan: 4 business hours
+
+2. Critical Incidents
+Critical incidents include:
+- System outage
+- Data breach
+- Payment processing failure affecting multiple users
+
+Critical incidents must be escalated immediately to the on-call engineer.
+
+3. Escalation Procedure
+Level 1: Customer Support Agent
+Level 2: Technical Support Specialist
+Level 3: Engineering Team
+Level 4: Head of Engineering
+
+4. SLA Guarantee
+Enterprise customers receive 99.9% uptime guarantee.
+If uptime falls below SLA threshold, service credits may apply.
+
+5. Legal Complaints
+Any legal threat or compliance issue must be escalated directly to the Legal Department within 2 hours.
