@@ -3,7 +3,7 @@ import time
 import hmac
 import hashlib
 import requests
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from rag_engine import (
     ingest_into_vector_db,
@@ -14,7 +14,7 @@ from rag_engine import (
 # -----------------------------
 # Initialize FastAPI
 # -----------------------------
-app = FastAPI()  # docs enabled again
+app = FastAPI()
 
 # Load vector DB once on startup
 @app.on_event("startup")
@@ -65,10 +65,38 @@ def verify_slack_request(request: Request, body: bytes):
 
 
 # -----------------------------
+# Background Slack Processing
+# -----------------------------
+def process_slack_event(event):
+    user_text = event.get("text", "")
+
+    retrieved, distances = retrieve_context(user_text)
+    best_distance = distances[0]
+    confidence = 1 - best_distance
+
+    if confidence < CONFIDENCE_THRESHOLD:
+        answer = "I'm not confident enough to answer that."
+    else:
+        answer = generate_answer(user_text, retrieved)
+
+    requests.post(
+        "https://slack.com/api/chat.postMessage",
+        headers={
+            "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "channel": event["channel"],
+            "text": answer
+        }
+    )
+
+
+# -----------------------------
 # Slack Events Endpoint
 # -----------------------------
 @app.post("/slack/events")
-async def slack_events(request: Request):
+async def slack_events(request: Request, background_tasks: BackgroundTasks):
     body = await request.body()
 
     verify_slack_request(request, body)
@@ -83,27 +111,7 @@ async def slack_events(request: Request):
         event = data["event"]
 
         if event.get("type") == "app_mention":
-            user_text = event.get("text", "")
-
-            retrieved, distances = retrieve_context(user_text)
-            best_distance = distances[0]
-            confidence = 1 - best_distance
-
-            if confidence < CONFIDENCE_THRESHOLD:
-                answer = "I'm not confident enough to answer that."
-            else:
-                answer = generate_answer(user_text, retrieved)
-
-            requests.post(
-                "https://slack.com/api/chat.postMessage",
-                headers={
-                    "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "channel": event["channel"],
-                    "text": answer
-                }
-            )
+            # Immediately acknowledge Slack
+            background_tasks.add_task(process_slack_event, event)
 
     return JSONResponse(content={"status": "ok"})
