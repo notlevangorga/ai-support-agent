@@ -65,3 +65,8 @@ Free-tier cold start handling implemented using background task processing to co
 ## Status
 
 Production-ready Slack bot successfully deployed and integrated.
+
+
+## Demo
+
+![Slack Demo](assets/demo.png)
